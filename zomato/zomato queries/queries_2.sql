@@ -19,10 +19,3 @@ WHERE t.month_rank IN(1,2)
 ORDER BY month DESC,month_rank ASC;
 
 
-SELECT *, 
-FIRST_VALUE(name) OVER(ORDER BY marks DESC) 
-FROM marks;
-
-SELECT *, 
-LAST_VALUE(name) OVER(ORDER BY marks DESC) 
-FROM marks
