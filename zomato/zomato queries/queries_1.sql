@@ -1,0 +1,33 @@
+# find the favorite item of each user
+  
+WITH fav_food AS (
+SELECT t1.user_id,name,f_name,COUNT(*) AS frequency FROM users t1
+JOIN orders t2
+ON t1.user_id = t2.user_id
+JOIN order_details t3
+ON t2.order_id = t3.order_id
+JOIN food t4
+ON t3.f_id = t4.f_id
+GROUP BY t2.user_id,t3.f_id
+)
+SELECT * FROM fav_food t1 
+WHERE t1.frequency = (SELECT MAX(frequency) FROM fav_food t2
+WHERE t2.name = t1.name 
+);
+
+# average rating of restaurants
+  
+SELECT r_name,t1.r_id,ROUND(AVG(restaurant_rating),1) 
+AS avg_rating
+FROM zomato.orders t1
+JOIN zomato.restaurants t2
+ON t1.r_id = t2.r_id 
+GROUP BY t1.r_id,r_name;
+# or (subquery in from clause)
+SELECT r_name ,avg_rating FROM
+(SELECT r_id,AVG(restaurant_rating) 
+AS avg_rating 
+FROM zomato.orders
+GROUP BY r_id) t1 
+JOIN zomato.restaurants t2 ON t1.r_id = t2.r_id;
+
